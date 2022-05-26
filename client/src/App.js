@@ -21,6 +21,7 @@ function App() {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const chatBox = useRef(null);
+  const socketRef = useRef();
 
   // const [hoistedMessage, setHoistedMessage] = useState(null);
 
@@ -57,8 +58,14 @@ function App() {
 
   const sendMessage = (e) => {
     e.preventDefault();
-    socket.emit("send", message);
-    setMessage("");
+    const payload = {
+      content: message,
+      to: currentChat.isChannel ? currentChat.chatName, currentChat.receiverId,
+      sender: username,
+      chatName: currentChat.chatName,
+      isChannel: currentChat.isChannel,
+    };
+    socketRef.current.emit("send", payload);
   }
 
   return (
