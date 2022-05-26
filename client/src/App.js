@@ -1,6 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import io from "socket.io-client";
-import moment from "moment";
 import { useState, useEffect, useRef } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
