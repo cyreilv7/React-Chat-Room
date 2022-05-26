@@ -8,49 +8,49 @@ import Form from "react-bootstrap/Form";
 import InputGroup from 'react-bootstrap/InputGroup'
 import Button from "react-bootstrap/Button";
 import "./App.scss";
+import Chatbox from "./Chatbox";
 
 const socket = io.connect("http://localhost:3001");
 
 
 function App() {
-  const [username, setUsername] = useState("Anonymous User");
-  const isFirstRender = useRef(true);
   const [users, setUsers] = useState([]);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
-  const [hoistedMessage, setHoistedMessage] = useState(null);
+  const chatBox = useRef(null);
+
+  // const [hoistedMessage, setHoistedMessage] = useState(null);
 
 
   useEffect(() => {
-    console.log("user has entered");
-
     socket.on("connect", () => {
       const username = prompt("What is your username?");
       socket.emit("userEntered", username);
     });
 
     socket.on("users", users => {
+      console.log(users);
       setUsers(users);
     });
 
     socket.on("connected", ({ user, msg }) => {
       setUsers(existingUsers => [...existingUsers, user]);
-      setHoistedMessage(msg);
+      setMessages(messages => [...messages, msg]);
     });
 
     socket.on("message", message => {
       setMessages(messages => [...messages, message]);
+      chatBox.current.scrollTop = chatBox.current.scrollHeight;
     });
 
     socket.on("disconnected", ({ id, msg }) => {
-      setHoistedMessage(msg);
+      setMessages(messages => [...messages, msg]);
       setUsers(users => {
         return users.filter(user => user.id !== id);
       });
     });
 
   }, []);
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
