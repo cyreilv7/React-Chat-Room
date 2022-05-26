@@ -13,6 +13,12 @@ const socket = io.connect("http://localhost:3001");
 
 
 function App() {
+  const initialMessagesState = {
+    general: [],
+    random: [],
+    "programming-help": [],
+    "career-advice": [],
+  }
   const [username, setUsername] = useState("");
   const [isConnected, setIsConnected] = useState(false);
   const [currentChat, setCurrentChat] = useState({
@@ -22,7 +28,7 @@ function App() {
   });
   const [connectedRooms, setConnectedRooms] = useState(["general"]);
   const [users, setUsers] = useState([]);
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState(initialMessagesState);
   const [message, setMessage] = useState("");
   const chatBox = useRef(null);
   const socketRef = useRef();
