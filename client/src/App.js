@@ -4,11 +4,9 @@ import { useState, useEffect, useRef } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Form from "react-bootstrap/Form";
-import InputGroup from 'react-bootstrap/InputGroup'
-import Button from "react-bootstrap/Button";
 import "./App.scss";
 import Chatbox from "./Chatbox";
+import SubmitField from "./SubmitField";
 
 const socket = io.connect("http://localhost:3001");
 
@@ -65,28 +63,7 @@ function App() {
           <Col md={9}>
           <h2>Messages</h2>
           <Chatbox messages={ messages } reference={ chatBox }/>
-          <Form onSubmit={(e) => {
-                e.preventDefault();
-                if (message !== "")
-                  handleSubmit(e);
-            }}>
-              <InputGroup>
-              <Form.Control 
-                  onChange={(e) => setMessage(e.target.value)}
-                  size="lg" 
-                  type="text" 
-                  value = { message }
-                />
-                  <Button
-                    className="submit-btn"
-                    variant={"primary"}
-                    type="submit"
-                  >
-                    Submit
-                  </Button>
-              </InputGroup>
-
-            </Form>
+          <SubmitField message={message} setMessage={setMessage} handleSubmit={handleSubmit} />
 
           </Col>
           <Col md={3} className="text-center d-flex flex-column">
