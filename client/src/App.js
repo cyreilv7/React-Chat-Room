@@ -64,7 +64,7 @@ function App() {
     e.preventDefault();
     const payload = {
       content: message,
-      to: currentChat.isChannel ? currentChat.chatName, currentChat.receiverId,
+      to: currentChat.isChannel ? currentChat.chatName : currentChat.receiverId,
       sender: username,
       chatName: currentChat.chatName,
       isChannel: currentChat.isChannel,
@@ -76,7 +76,25 @@ function App() {
         content: message
       });
     });
-    setMessages(newMessage);
+    setMessages(newMessages);
+  }
+
+  let body;
+  if (connected) {
+    body = (
+      <Chatbox
+        user={user}
+        userId={socketRef.current ? socketRef.current.id : ""}
+        currentChat={currentChat}
+        toggleChat={toggleChat}
+        joinRoom={joinRoom}
+        handleMessageChange={handleMessageChange}
+        message={message}
+        users={users}
+        messages={messages[currentChat.chatName]}
+        connectedRooms={connectedRooms}
+      />
+    )
   }
 
   return (
@@ -85,7 +103,7 @@ function App() {
         <Row>
           <Col md={9}>
           <h2>Messages</h2>
-          <Chatbox messages={ messages } reference={ chatBox }/>
+          {/* <Chatbox messages={ messages } reference={ chatBox }/> */}
           <SubmitField message={message} setMessage={setMessage} handleSubmit={handleSubmit} />
 
           </Col>
