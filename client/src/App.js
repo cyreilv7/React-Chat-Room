@@ -20,7 +20,7 @@ function App() {
     chatName: "general",
     receiverId: ""
   });
-  const [connectedRooms, setConnectedRooms] = useState(["general"]); // default room array
+  const [connectedRooms, setConnectedRooms] = useState(["general"]);
   const [users, setUsers] = useState([]);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
@@ -70,6 +70,13 @@ function App() {
       isChannel: currentChat.isChannel,
     };
     socketRef.current.emit("send", payload);
+    const newMessages =  immer(messages, draft => {
+      draft[currentChat.chatName].push({
+        sender: username,
+        content: message
+      });
+    });
+    setMessages(newMessage);
   }
 
   return (
