@@ -64,21 +64,11 @@ function App() {
         <Row>
           <Col md={9}>
           <h2>Messages</h2>
-          <Container className="chatbox">
-            {hoistedMessage && <div> { hoistedMessage } </div>}
-            {messages.map(({ user, date, text }, index) => (
-              <Row key={index} className="row mb-2">
-                <Col md={2}>
-                  {moment(date).format("h:mm:ss a")}
-                </Col>
-                <Col md={2}> {user.username}</Col>
-                <Col> {text}</Col>
-              </Row>
-            ))}
-          </Container>
-
-            <Form onSubmit={(e) => {
-                handleSubmit(e);
+          <Chatbox messages={ messages } reference={ chatBox }/>
+          <Form onSubmit={(e) => {
+                e.preventDefault();
+                if (message !== "")
+                  handleSubmit(e);
             }}>
               <InputGroup>
               <Form.Control 
