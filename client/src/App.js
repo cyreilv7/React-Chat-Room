@@ -15,7 +15,11 @@ const socket = io.connect("http://localhost:3001");
 function App() {
   const [username, setUsername] = useState("");
   const [isConnected, setIsConnected] = useState(false);
-  const [currentChat, setCurrentChat] = useState(null);
+  const [currentChat, setCurrentChat] = useState({
+    isChannel: true,
+    chatName: "general",
+    receiverId: ""
+  });
   const [connectedRooms, setConnectedRooms] = useState(["general"]); // default room array
   const [users, setUsers] = useState([]);
   const [messages, setMessages] = useState([]);
