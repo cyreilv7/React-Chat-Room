@@ -64,6 +64,10 @@ function App() {
 
   }, []);
 
+  const handleUsernameChange = (e) => {
+    setUsername(e.target.value);
+  }
+
   const handleMessageChange = (e) => {
     setMessage(e.target.value);
   }
@@ -104,7 +108,7 @@ function App() {
   }
 
   const toggleChat = (currentChat) => {
-    // if client doesn't have msgs for this chat room, initialize it to empty array
+    // create new chatroom if it doesn't exist
     if (!messages[currentChat]) {
       const newMessages = immer(messages, draft => {
         draft[currentChat.chatName] = []; 
@@ -128,6 +132,14 @@ function App() {
         users={users}
         messages={messages[currentChat.chatName]}
         connectedRooms={connectedRooms}
+      />
+    )
+  } else {
+    body = (
+      <UsernameForm
+        username={username}
+        handleUsernameChange={handleUsernameChange}
+        connect={connect}
       />
     )
   }
