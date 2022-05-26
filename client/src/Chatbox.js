@@ -10,9 +10,9 @@ const Chatbox = ( { messages, reference}) => {
         {messages.map(({ user, date, text }, index) => (
           <Row key={index} className="row mb-2">
             <Col md={2}>
-              {moment(date).format("h:mma")}
+              {moment(date).format("h:mm a")}
             </Col>
-            {user && <Col md={2}> {user.username}</Col>}
+            <Col md={2}> {user.username}</Col>
             <Col> {text} </Col>
           </Row>
         ))}

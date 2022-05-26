@@ -19,6 +19,7 @@ const io = require("socket.io")(server, {
 });
   
 const users = {}; // format: { client.id: {username: username, id: client.id}, ... }
+const chatBot = {username: "ChatBot"}
 
 // event listeners
 io.on("connection", (socket) => {
@@ -34,6 +35,7 @@ io.on("connection", (socket) => {
             msg: {
                 text: `${user.username} has joined the chat.`,
                 date: new Date().toISOString(),
+                user: chatBot,
             } 
         });
         io.emit("users", Object.values(users));
@@ -59,6 +61,7 @@ io.on("connection", (socket) => {
             msg: {
                 text: `${users[socket.id].username} has left the chat.`,
                 date: new Date().toISOString(),
+                user: chatBot,
             }, 
             id: socket.id,
         });
