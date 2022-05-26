@@ -1,5 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import io from "socket.io-client";
+import immer from "immer";
 import { useState, useEffect, useRef } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -12,9 +13,13 @@ const socket = io.connect("http://localhost:3001");
 
 
 function App() {
+  const [username, setUsername] = useState("");
+  const [isConnected, setIsConnected] = useState(false);
+  const [currentChat, setCurrentChat] = useState(null);
+  const [connectedRooms, setConnectedRooms] = useState(["general"]); // default room array
   const [users, setUsers] = useState([]);
-  const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [message, setMessage] = useState("");
   const chatBox = useRef(null);
 
   // const [hoistedMessage, setHoistedMessage] = useState(null);
@@ -50,7 +55,7 @@ function App() {
 
   }, []);
 
-  const handleSubmit = (e) => {
+  const sendMessage = (e) => {
     e.preventDefault();
     socket.emit("send", message);
     setMessage("");
