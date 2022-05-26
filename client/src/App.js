@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import io from "socket.io-client";
-import immer from "immer";
+import immer from "immer"; // introduces immutability to prevent side effects (alternative to redux)
 import { useState, useEffect, useRef } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -26,8 +26,6 @@ function App() {
   const [message, setMessage] = useState("");
   const chatBox = useRef(null);
   const socketRef = useRef();
-
-  // const [hoistedMessage, setHoistedMessage] = useState(null);
 
 
   useEffect(() => {
@@ -70,7 +68,7 @@ function App() {
       isChannel: currentChat.isChannel,
     };
     socketRef.current.emit("send", payload);
-    const newMessages =  immer(messages, draft => {
+    const newMessages =  immer(messages, draft => { 
       draft[currentChat.chatName].push({
         sender: username,
         content: message
@@ -79,11 +77,28 @@ function App() {
     setMessages(newMessages);
   }
 
+  // callback fn which handles grabbing prev msgs from server and pushing them to client-side
+  setConnectedRooms(newConnectedRooms);
+  const joinRoomCallback = (messages, room) => {
+    const newMessages = immer(messages, draft => {
+      draft.push()
+    });
+    setMessages(newMessages);
+  }
+
+  const joinRoom = (room) => {
+    const newConnectedRooms = immer(connectedRooms, draft => {
+      draft.push(room);
+    })
+    setConnectedRooms(newConnectedRooms);
+    socket.emit("join room", room, (messages) => joinRoomCallback(messages, room)); 
+  }
+
   let body;
   if (connected) {
     body = (
       <Chatbox
-        user={user}
+        username={username}
         userId={socketRef.current ? socketRef.current.id : ""}
         currentChat={currentChat}
         toggleChat={toggleChat}
