@@ -6,14 +6,14 @@ import { useEffect, useRef } from 'react';
 
 const Chatbox = ( { messages, reference}) => {
     return (  
-        <Container className="chatbox" ref={ reference }>
+        <Container className="chatbox align-items-center" ref={ reference }>
         {messages.map(({ user, date, text }, index) => (
-          <Row key={index} className="row mb-2">
-            <Col md={2}>
-              {moment(date).format("h:mm a")}
+          <Row key={index} className="chat-row row mb-2 border-bottom">
+            <Col className="d-flex align-items-center" md={2}>
+              <div>{moment(date).format("h:mm a")}</div>
             </Col>
-            <Col md={2}> {user.username}</Col>
-            <Col> {text} </Col>
+            <Col className="d-flex align-items-center" md={2}> <div>{user.username}</div></Col>
+            <Col className="d-flex align-items-center"> <div>{text}</div></Col>
           </Row>
         ))}
       </Container>

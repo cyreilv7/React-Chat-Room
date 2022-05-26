@@ -1,0 +1,30 @@
+@import "~bootstrap/scss/bootstrap";
+
+.App {
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+#wrapper {
+    margin-top: 2em;
+}
+
+.chatbox {
+    height: 200px;
+    background-color: #eee;
+    overflow: scroll;
+    .chat-row {
+        height: 75px;
+    }
+}
+
+.msg-field {
+    .submit-container {
+        padding-right: 0;
+        button {
+            height: 100%;
+            width: 100%;
+        }
+    }
+}
+
