@@ -41,12 +41,6 @@ io.on("connection", (socket) => {
         io.emit("users", Object.values(users));
     })
 
-    socket.on("usernameChange", (enteredUsername) => {
-        if (users[socket.id]) {
-            users[socket.id].username = enteredUsername;
-            io.emit("users", Object.values(users));
-        }
-    })
 
     socket.on("send", message => {
         io.emit("message", {
