@@ -20,6 +20,12 @@ const io = require("socket.io")(server, {
   
 const users = {}; // format: { client.id: {username: username, id: client.id}, ... }
 const chatBot = {username: "ChatBot"}
+const messages = {
+    general: [],
+    random: [],
+    pets: [],
+    "career-advice": []
+}
 
 // event listeners
 io.on("connection", (socket) => {
@@ -39,16 +45,37 @@ io.on("connection", (socket) => {
             } 
         });
         io.emit("users", Object.values(users));
-    })
+    });
+
+    socket.on("join room", (roomName, cb) => {
+        socket.join(roomName);
+        cb(messages[roomName]);
+    });
 
 
-    socket.on("send", message => {
-        io.emit("message", {
-            text: message,
-            date: new Date().toISOString(),
-            user: users[socket.id],
-        });
-    })
+    socket.on("send", ({ content, to, sender, chatName, isChannel }) => {
+        if (isChannel) {
+            const payload = {
+                content,
+                chatName,
+                sender,
+            };
+            socket.to(to).emit("message", payload); // 'to' can be a room name or socket id
+        } else {
+            const payload = {
+                content,
+                chatName: sender, // dm chat name = sender 
+                sender,
+            };
+            socket.to(to).emit("message", payload);
+        }
+        if (messages[chatName]) {
+            messages[chatName].push({
+                sender,
+                content
+            });
+        }
+    });
 
     socket.on("disconnect", () => {
         io.emit("disconnected", {
@@ -60,6 +87,6 @@ io.on("connection", (socket) => {
             id: socket.id,
         });
         delete users[socket.id]
-    })
+    });
 })
 
