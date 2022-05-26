@@ -81,11 +81,10 @@ function App() {
     setMessages(newMessages);
   }
 
-  // callback fn which handles grabbing prev msgs from server and pushing them to client-side
-  setConnectedRooms(newConnectedRooms);
-  const joinRoomCallback = (messages, room) => {
+  // callback fn which handles grabbing prev msgs stored on server and pushing them to client-side
+  const joinRoomCallback = (incomingMessages, room) => {
     const newMessages = immer(messages, draft => {
-      draft.push()
+      draft[room] = incomingMessages;
     });
     setMessages(newMessages);
   }
@@ -98,8 +97,19 @@ function App() {
     socket.emit("join room", room, (messages) => joinRoomCallback(messages, room)); 
   }
 
+  const toggleChat = (currentChat) => {
+    // if client doesn't have msgs for this chat room, initialize it to empty array
+    if (!messages[currentChat]) {
+      const newMessages = immer(messages, draft => {
+        draft[currentChat.chatName] = []; 
+      })
+      setMessages(newMessages);
+    }
+    setCurrentChat(currentChat);
+  }
+
   let body;
-  if (connected) {
+  if (isConnected) {
     body = (
       <Chatbox
         username={username}
@@ -123,7 +133,7 @@ function App() {
           <Col md={9}>
           <h2>Messages</h2>
           {/* <Chatbox messages={ messages } reference={ chatBox }/> */}
-          <SubmitField message={message} setMessage={setMessage} handleSubmit={handleSubmit} />
+          {/* <SubmitField message={message} setMessage={setMessage} sendMessage={sendMessage} /> */}
 
           </Col>
           <Col md={3} className="text-center d-flex flex-column">
