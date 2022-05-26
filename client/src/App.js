@@ -58,6 +58,10 @@ function App() {
 
   }, []);
 
+  const handleMessageChange = (e) => {
+    setMessage(e.target.value);
+  }
+
   const sendMessage = (e) => {
     e.preventDefault();
     const payload = {
