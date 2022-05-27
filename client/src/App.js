@@ -1,3 +1,4 @@
+import React from 'react'
 import "bootstrap/dist/css/bootstrap.min.css";
 import io from "socket.io-client";
 import immer from "immer"; // introduces immutability to prevent side effects (alternative to redux)
@@ -14,13 +15,13 @@ function App() {
     random: [],
     "programming-help": [],
     "career-advice": [],
-  }
+  };
   const [username, setUsername] = useState("");
   const [isConnected, setIsConnected] = useState(false);
   const [currentChat, setCurrentChat] = useState({
     isChannel: true,
     chatName: "general",
-    receiverId: ""
+    receiverId: "",
   });
   const [connectedRooms, setConnectedRooms] = useState(["general"]);
   const [allUsers, setAllUsers] = useState([]);
