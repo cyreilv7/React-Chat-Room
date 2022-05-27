@@ -28,7 +28,7 @@ function App() {
   });
   const [connectedRooms, setConnectedRooms] = useState(["general"]);
   const [users, setUsers] = useState([]);
-  const [messages, setMessages] = useState(initialMessagesState);
+  const [messages, setAllMessages] = useState(initialMessagesState);
   const [message, setMessage] = useState("");
   const chatBox = useRef(null);
   const socketRef = useRef();
@@ -40,7 +40,7 @@ function App() {
     socketRef.current.emit("join room", "general", room, (messages) => joinRoomCallback(messages, room));
     socketRef.current.on("new user", users => setUsers(users));
     socketRef.current.on("new message", ({ content, sender, chatName }) => {
-      setMessages(messages => {
+      setAllMessages(messages => {
         const newMessages = immer(messages, draft => {
           if (draft[chatName]) {
             draft.push( { content, sender } );
@@ -77,7 +77,8 @@ function App() {
         content: message
       });
     });
-    setMessages(newMessages);
+    setAllMessages(newMessages);
+    setMessage("");
   }
 
   // callback fn which handles grabbing prev msgs stored on server and pushing them to client-side
@@ -85,7 +86,7 @@ function App() {
     const newMessages = immer(messages, draft => {
       draft[room] = incomingMessages;
     });
-    setMessages(newMessages);
+    setAllMessages(newMessages);
   }
 
   const joinRoom = (room) => {
@@ -102,7 +103,7 @@ function App() {
       const newMessages = immer(messages, draft => {
         draft[currentChat.chatName] = []; 
       })
-      setMessages(newMessages);
+      setAllMessages(newMessages);
     }
     setCurrentChat(currentChat);
   }
