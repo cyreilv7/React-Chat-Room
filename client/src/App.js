@@ -33,36 +33,12 @@ function App() {
   const chatBox = useRef(null);
   const socketRef = useRef();
 
-
-  useEffect(() => {
-    socket.on("connect", () => {
-      const username = prompt("What is your username?");
-      socket.emit("userEntered", username);
-    });
-
-    socket.on("users", users => {
-      console.log(users);
-      setUsers(users);
-    });
-
-    socket.on("connected", ({ user, msg }) => {
-      setUsers(existingUsers => [...existingUsers, user]);
-      setMessages(messages => [...messages, msg]);
-    });
-
-    socket.on("message", message => {
-      setMessages(messages => [...messages, message]);
-      chatBox.current.scrollTop = chatBox.current.scrollHeight;
-    });
-
-    socket.on("disconnected", ({ id, msg }) => {
-      setMessages(messages => [...messages, msg]);
-      setUsers(users => {
-        return users.filter(user => user.id !== id);
-      });
-    });
-
-  }, []);
+  const connect = () => {
+    setIsConnected(true);
+    socketRef.current = io.connect("/");
+    socketRef.current.emit("join server", username);
+    socketRef.current.emit("join room", "general", room, (messages) => joinRoomCallback(messages, room));
+  }
 
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
