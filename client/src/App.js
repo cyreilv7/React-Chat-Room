@@ -38,6 +38,19 @@ function App() {
     socketRef.current = io.connect("/");
     socketRef.current.emit("join server", username);
     socketRef.current.emit("join room", "general", room, (messages) => joinRoomCallback(messages, room));
+    socketRef.current.on("new user", users => setUsers(users));
+    socketRef.current.on("new message", ({ content, sender, chatName }) => {
+      setMessages(messages => {
+        const newMessages = immer(messages, draft => {
+          if (draft[chatName]) {
+            draft.push( { content, sender } );
+          } else {
+            draft[chatName] = [{ content, sender }] ;
+          }
+        });
+        return newMessages;
+      })
+    });
   }
 
   const handleUsernameChange = (e) => {
