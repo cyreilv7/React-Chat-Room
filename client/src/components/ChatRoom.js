@@ -61,7 +61,7 @@ const ChatRoom = (props) => {
     );
   } else {
     body = (
-      <button onClick={() => props.joinRoom(props.currentChat.chatName)}> Join {props.activeChannel}</button>
+      <button onClick={() => props.joinRoom(props.currentChat.chatName)}> Join {props.currentChat.chatName}</button>
     )
   }
 
@@ -94,6 +94,15 @@ const ChatRoom = (props) => {
       );
     }
   };
+
+  const renderMessages = (message, i) => {
+    return (
+      <div key={ i }>
+        <h3> { message.sender }</h3>
+        <p> { message.content } </p>
+      </div>
+    );
+  }
 
   return (
     <Container>
