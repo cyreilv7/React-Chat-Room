@@ -11,10 +11,6 @@
 
 .sidebar {
     
-    * {
-        text-align: center;
-    }
-
     .row {
         cursor: pointer;
     }
@@ -38,6 +34,7 @@
         height: 15%;
         
         .text-box {
+            vertical-align: text-top;
             height: 100%;
         }
     }
