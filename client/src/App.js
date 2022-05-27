@@ -32,29 +32,31 @@ function App() {
     setIsConnected(true);
     socketRef.current = io.connect("/");
     socketRef.current.emit("join server", username);
-    socketRef.current.emit("join room", "general", (messages) => joinRoomCallback(messages, "general"));
-    socketRef.current.on("new user", users => setAllUsers(users));
+    socketRef.current.emit("join room", "general", (messages) =>
+      joinRoomCallback(messages, "general")
+    );
+    socketRef.current.on("new user", (users) => setAllUsers(users));
     socketRef.current.on("new message", ({ content, sender, chatName }) => {
       setMessages(messages => {
         const newMessages = immer(messages, draft => {
           if (draft[chatName]) {
-            draft.push( { content, sender } );
+            draft[chatName].push({ content, sender });
           } else {
             draft[chatName] = [{ content, sender }];
           }
         });
         return newMessages;
-      })
+      });
     });
-  }
+  };
 
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
-  }
+  };
 
   const handleMessageChange = (e) => {
     setMessage(e.target.value);
-  }
+  };
 
   const sendMessage = (e) => {
     e.preventDefault();
@@ -65,43 +67,45 @@ function App() {
       chatName: currentChat.chatName,
       isChannel: currentChat.isChannel,
     };
-    socketRef.current.emit("send", payload);
-    const newMessages =  immer(messages, draft => { 
+    socketRef.current.emit("send message", payload);
+    const newMessages = immer(messages, (draft) => {
       draft[currentChat.chatName].push({
         sender: username,
-        content: message
+        content: message,
       });
     });
     setMessages(newMessages);
     setMessage("");
-  }
+  };
 
   // callback fn which handles grabbing prev msgs stored on server and pushing them to client-side
   const joinRoomCallback = (incomingMessages, room) => {
-    const newMessages = immer(messages, draft => {
+    const newMessages = immer(messages, (draft) => {
       draft[room] = incomingMessages;
     });
     setMessages(newMessages);
-  }
+  };
 
   const joinRoom = (room) => {
-    const newConnectedRooms = immer(connectedRooms, draft => {
+    const newConnectedRooms = immer(connectedRooms, (draft) => {
       draft.push(room);
-    })
+    });
+    socketRef.current.emit("join room", room, (messages) =>
+      joinRoomCallback(messages, room)
+    );
     setConnectedRooms(newConnectedRooms);
-    socketRef.current.emit("join room", room, (messages) => joinRoomCallback(messages, room)); 
-  }
+  };
 
   const toggleChat = (currentChat) => {
     // create new chatroom if it doesn't exist
-    if (!messages[currentChat]) {
+    if (!messages[currentChat.chatName]) {
       const newMessages = immer(messages, draft => {
-        draft[currentChat.chatName] = []; 
-      })
+        draft[currentChat.chatName] = [];
+      });
       setMessages(newMessages);
     }
     setCurrentChat(currentChat);
-  }
+  };
 
   let body;
   if (isConnected) {
@@ -130,11 +134,7 @@ function App() {
     );
   }
 
-  return (
-    <div className="App">
-      { body }
-    </div>
-  );
+  return <div className="App">{body}</div>;
 }
 
 export default App;

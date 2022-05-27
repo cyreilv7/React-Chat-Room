@@ -95,12 +95,12 @@ const ChatRoom = (props) => {
         isChannel: false,
         receiverId: user.id,
       };
-      return (
-        <Row onClick={() => props.toggleChat(currentChat)} key={user.id}>
-          {user.username}
-        </Row>
-      );
-    }
+    return (
+      <Row onClick={() => props.toggleChat(currentChat)} key={user.id}>
+        {user.username}
+      </Row>
+    );
+  }
   };
 
   const handleKeyPress = (e) => {
