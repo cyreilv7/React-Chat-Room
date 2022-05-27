@@ -18,8 +18,7 @@ const io = require("socket.io")(server, {
     }
 });
   
-const users = []; // format: { client.id: {username: username, id: client.id}, ... }
-const chatBot = {username: "ChatBot"}
+let users = []; // format: { client.id: {username: username, id: client.id}, ... }
 const messages = {
     general: [],
     random: [],
@@ -67,10 +66,11 @@ io.on("connection", (socket) => {
                 content
             });
         }
+        console.log(messages[chatName]);
     });
 
     socket.on("disconnect", () => {
-        users.filter(user => user.id == socket.id);
+        users = users.filter(user => user.id !== socket.id);
         io.emit("new user", users);
     });
 })
