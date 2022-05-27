@@ -50,9 +50,17 @@ const Messages = styled.div`
 
 const ChatRoom = (props) => {
   const rooms = ["general", "random", "programming-help", "career-advice"];
-
   let body;
   // check if not channel or if user previously connected to this room
+  const renderMessages = (message, i) => {
+    return (
+      <div key={ i }>
+        <h3> { message.sender }</h3>
+        <p> { message.content } </p>
+      </div>
+    );
+  }
+
   if (!props.currentChat.isChannel || props.connectedRooms.includes(props.currentChat.chatName)) {
     body = (
       <Messages>
@@ -95,13 +103,10 @@ const ChatRoom = (props) => {
     }
   };
 
-  const renderMessages = (message, i) => {
-    return (
-      <div key={ i }>
-        <h3> { message.sender }</h3>
-        <p> { message.content } </p>
-      </div>
-    );
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      props.sendMessage(e);
+    }
   }
 
   return (
@@ -122,12 +127,12 @@ const ChatRoom = (props) => {
         <TextBox
           value={props.message}
           onChange={props.handleMessageChange}
-          onKeyPress={handleKeyPress}
-          placeholder=""
+          onKeyPress={(e) => handleKeyPress(e)}
+          placeholder="Text here"
         />
       </ChatPanel>
     </Container>
   );
-};
+}
 
 export default ChatRoom;
