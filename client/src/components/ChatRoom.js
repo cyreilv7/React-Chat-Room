@@ -1,52 +1,7 @@
 import React from 'react'
-import styled from "styled-components";
-
-const Container = styled.div`
-    height: 100vh;
-    width: 100%;
-    display: flex;
-`;
-
-const Sidebar = styled.div`
-    height: 100%;
-    width: 15%;
-    border-right: 1px solid black;
-`;
-
-const ChatPanel = styled.div`
-    height: 100;
-    width: 85%;
-    display: flex;
-    flex-direction: column;
-`;
-
-const BodyContainer = styled.div`
-    width: 100%;
-    height: 75%;
-    overflow: scroll;
-    border-bottom: 1px solid black;
-`;
-
-const TextBox = styled.textarea`
-    height: 15%;
-    width: 100%;
-`;
-
-const ChannelInfo = styled.div`
-    height: 10%;
-    width: 100%;
-    border-bottom: 1px solid black;
-`;
-
-const Row = styled.div`
-    cursor: pointer;
-`;
-
-const Messages = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-`;
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col'
 
 const ChatRoom = (props) => {
   const rooms = ["general", "random", "programming-help", "career-advice"];
@@ -55,7 +10,7 @@ const ChatRoom = (props) => {
   const renderMessages = (message, i) => {
     return (
       <div key={ i }>
-        <h3> { message.sender }</h3>
+        <h5> { message.sender }</h5>
         <p> { message.content } </p>
       </div>
     );
@@ -63,9 +18,9 @@ const ChatRoom = (props) => {
 
   if (!props.currentChat.isChannel || props.connectedRooms.includes(props.currentChat.chatName)) {
     body = (
-      <Messages>
+      <Row>
         {props.messages.map(renderMessages)}
-      </Messages>
+      </Row>
     );
   } else {
     body = (
@@ -81,7 +36,7 @@ const ChatRoom = (props) => {
     };
     return (
       <Row onClick={() => props.toggleChat(currentChat)} key={room}>
-        {room}
+        #{room}
       </Row>
     );
   };
@@ -110,27 +65,38 @@ const ChatRoom = (props) => {
   }
 
   return (
-    <Container>
-      <Sidebar sm={4}>
-          <h3>Channels</h3>
-          {rooms.map(renderRooms)}
-          <h3>All users</h3>
-          {props.allUsers.map(renderUsers)}
-      </Sidebar>
-      <ChatPanel>
-        <ChannelInfo>
-          {props.currentChat.chatName}
-        </ChannelInfo>
-        <BodyContainer>
-          { body }
-        </BodyContainer>
-        <TextBox
-          value={props.message}
-          onChange={props.handleMessageChange}
-          onKeyPress={(e) => handleKeyPress(e)}
-          placeholder="Text here"
-        />
-      </ChatPanel>
+    <Container className="chatroom-container">
+      <Row style={ { "height": "100%" } }>
+        <Col sm={4} className="sidebar text-center">
+          <Row className="channels">
+            <h3>Channels</h3>
+            {rooms.map(renderRooms)}
+          </Row>
+          <Row className="users mt-5">
+            <h3>All users</h3>
+            {props.allUsers.map(renderUsers)}
+          </Row>
+        </Col>
+        <Col sm={8} className="chat-pannel d-flex flex-column">
+          <Row className="channel-info">
+              #{props.currentChat.chatName}
+          </Row>
+          <div className="messages">
+            { body }
+          </div>
+          <div className="text-box-container">
+            <textarea
+              className="text-box w-100"
+              value={props.message}
+              onChange={props.handleMessageChange}
+              onKeyPress={(e) => handleKeyPress(e)}
+              placeholder="Text here"
+            >
+            </textarea>
+          </div>
+        </Col>
+      </Row>
+
     </Container>
   );
 }

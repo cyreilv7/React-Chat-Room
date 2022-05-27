@@ -6,25 +6,39 @@
 }
 
 #wrapper {
-    margin-top: 2em;
+    height: 100%;
 }
 
-.chatbox {
-    height: 200px;
-    background-color: #eee;
-    overflow: scroll;
-    .chat-row {
-        height: 75px;
+.sidebar {
+    
+    * {
+        text-align: center;
+    }
+
+    .row {
+        cursor: pointer;
     }
 }
 
-.msg-field {
-    .submit-container {
-        padding-right: 0;
-        button {
+.chatroom-container {
+    height: 90vh;
+    width: 100%;
+    margin-top: 1em;
+    margin-bottom: 1em;
+
+    .channel-info {
+        height: 10%;
+    }
+
+    .messages {
+        height: 75%;
+    }
+
+    .text-box-container {
+        height: 15%;
+        
+        .text-box {
             height: 100%;
-            width: 100%;
         }
     }
 }
-
