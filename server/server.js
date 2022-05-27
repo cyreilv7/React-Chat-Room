@@ -18,56 +18,48 @@ const io = require("socket.io")(server, {
     }
 });
   
-const users = {}; // format: { client.id: {username: username, id: client.id}, ... }
+const users = []; // format: { client.id: {username: username, id: client.id}, ... }
 const chatBot = {username: "ChatBot"}
 const messages = {
     general: [],
     random: [],
-    pets: [],
+    "programming-help": [],
     "career-advice": []
 }
 
 // event listeners
 io.on("connection", (socket) => {
     // when user enters, update userlist for all sockets
-    socket.on("userEntered", (username) => {
+    socket.on("join server", (username) => {
         const user = {
             username: username,
             id: socket.id
         };
-        users[socket.id] = user;
-        io.emit("connected", { 
-            user: user, 
-            msg: {
-                text: `${user.username} has joined the chat.`,
-                date: new Date().toISOString(),
-                user: chatBot,
-            } 
-        });
-        io.emit("users", Object.values(users));
+        users.push(user);
+        io.emit("new user", users);
     });
 
     socket.on("join room", (roomName, cb) => {
         socket.join(roomName);
-        cb(messages[roomName]);
+        cb(messages[roomName]); // cb fn which passes server-side data to client-side
     });
 
 
-    socket.on("send", ({ content, to, sender, chatName, isChannel }) => {
+    socket.on("send message", ({ content, to, sender, chatName, isChannel }) => {
         if (isChannel) {
             const payload = {
                 content,
                 chatName,
                 sender,
             };
-            socket.to(to).emit("message", payload); // 'to' can be a room name or socket id
+            socket.to(to).emit("new message", payload); // 'to' can be a room name or socket id
         } else {
             const payload = {
                 content,
                 chatName: sender, // dm chat name = sender 
                 sender,
             };
-            socket.to(to).emit("message", payload);
+            socket.to(to).emit("new message", payload);
         }
         if (messages[chatName]) {
             messages[chatName].push({
@@ -78,15 +70,8 @@ io.on("connection", (socket) => {
     });
 
     socket.on("disconnect", () => {
-        io.emit("disconnected", {
-            msg: {
-                text: `${users[socket.id].username} has left the chat.`,
-                date: new Date().toISOString(),
-                user: chatBot,
-            }, 
-            id: socket.id,
-        });
-        delete users[socket.id]
+        users.filter(user => user.id == socket.id);
+        io.emit("new user", users);
     });
 })
 
