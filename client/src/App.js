@@ -1,16 +1,12 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import io from "socket.io-client";
 import immer from "immer"; // introduces immutability to prevent side effects (alternative to redux)
-import { useState, useEffect, useRef } from "react";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import { useState, useRef } from "react";
 import "./App.scss";
-import Chatbox from "./Chatbox";
-import SubmitField from "./SubmitField";
+import ChatRoom from "./components/ChatRoom";
+import UsernameForm from "./components/UsernameForm";
 
-const socket = io.connect("http://localhost:3001");
-
+// const socket = io.connect("http://localhost:3001");
 
 function App() {
   const initialMessagesState = {
@@ -27,25 +23,24 @@ function App() {
     receiverId: ""
   });
   const [connectedRooms, setConnectedRooms] = useState(["general"]);
-  const [users, setUsers] = useState([]);
-  const [messages, setAllMessages] = useState(initialMessagesState);
+  const [allUsers, setAllUsers] = useState([]);
+  const [messages, setMessages] = useState(initialMessagesState);
   const [message, setMessage] = useState("");
-  const chatBox = useRef(null);
   const socketRef = useRef();
 
   const connect = () => {
     setIsConnected(true);
     socketRef.current = io.connect("/");
     socketRef.current.emit("join server", username);
-    socketRef.current.emit("join room", "general", room, (messages) => joinRoomCallback(messages, room));
-    socketRef.current.on("new user", users => setUsers(users));
+    socketRef.current.emit("join room", "general", (messages) => joinRoomCallback(messages, "general"));
+    socketRef.current.on("new user", users => setAllUsers(users));
     socketRef.current.on("new message", ({ content, sender, chatName }) => {
-      setAllMessages(messages => {
+      setMessages(messages => {
         const newMessages = immer(messages, draft => {
           if (draft[chatName]) {
             draft.push( { content, sender } );
           } else {
-            draft[chatName] = [{ content, sender }] ;
+            draft[chatName] = [{ content, sender }];
           }
         });
         return newMessages;
@@ -77,7 +72,7 @@ function App() {
         content: message
       });
     });
-    setAllMessages(newMessages);
+    setMessages(newMessages);
     setMessage("");
   }
 
@@ -86,7 +81,7 @@ function App() {
     const newMessages = immer(messages, draft => {
       draft[room] = incomingMessages;
     });
-    setAllMessages(newMessages);
+    setMessages(newMessages);
   }
 
   const joinRoom = (room) => {
@@ -94,7 +89,7 @@ function App() {
       draft.push(room);
     })
     setConnectedRooms(newConnectedRooms);
-    socket.emit("join room", room, (messages) => joinRoomCallback(messages, room)); 
+    socketRef.current.emit("join room", room, (messages) => joinRoomCallback(messages, room)); 
   }
 
   const toggleChat = (currentChat) => {
@@ -103,7 +98,7 @@ function App() {
       const newMessages = immer(messages, draft => {
         draft[currentChat.chatName] = []; 
       })
-      setAllMessages(newMessages);
+      setMessages(newMessages);
     }
     setCurrentChat(currentChat);
   }
@@ -111,19 +106,20 @@ function App() {
   let body;
   if (isConnected) {
     body = (
-      <Chatbox
+      <ChatRoom
         username={username}
-        userId={socketRef.current ? socketRef.current.id : ""}
+        yourId={socketRef.current ? socketRef.current.id : ""}
         currentChat={currentChat}
         toggleChat={toggleChat}
         joinRoom={joinRoom}
         handleMessageChange={handleMessageChange}
         message={message}
-        users={users}
+        allUsers={allUsers}
         messages={messages[currentChat.chatName]}
         connectedRooms={connectedRooms}
+        sendMessage={sendMessage}
       />
-    )
+    );
   } else {
     body = (
       <UsernameForm
@@ -131,31 +127,12 @@ function App() {
         handleUsernameChange={handleUsernameChange}
         connect={connect}
       />
-    )
+    );
   }
 
   return (
     <div className="App">
-      <Container id="wrapper">
-        <Row>
-          <Col md={9}>
-          <h2>Messages</h2>
-          {/* <Chatbox messages={ messages } reference={ chatBox }/> */}
-          {/* <SubmitField message={message} setMessage={setMessage} sendMessage={sendMessage} /> */}
-
-          </Col>
-          <Col md={3} className="text-center d-flex flex-column">
-            <h2>Current Users</h2>
-            <div>
-              {users.map(( { username, id } ) => (
-                <div key={id}>
-                  { username }
-                </div>
-              ))}
-            </div>
-          </Col>
-        </Row>
-      </Container>
+      { body }
     </div>
   );
 }
