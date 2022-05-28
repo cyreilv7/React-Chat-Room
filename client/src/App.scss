@@ -1,41 +1,57 @@
 @import "~bootstrap/scss/bootstrap";
 
 .App {
-    min-height: 100vh;
+    height: 90vh;
     box-sizing: border-box;
 }
 
-#wrapper {
-    height: 100%;
-}
-
-.sidebar {
-    
-    .row {
-        cursor: pointer;
-    }
-}
-
 .chatroom-container {
-    height: 90vh;
+    height: 100%;
     width: 100%;
     margin-top: 1em;
     margin-bottom: 1em;
 
+    .sidebar {
+        .row {
+            cursor: pointer;
+        }
+    }
+
+    .sidebar, .chat-panel {
+        height: 100%;
+    }
+
     .channel-info {
-        height: 10%;
+        height: 50px;
     }
 
     .messages {
-        height: 75%;
+        height: 70%;
+        overflow: auto;
     }
 
     .text-box-container {
-        height: 15%;
+        height: 100px;
         
         .text-box {
             vertical-align: text-top;
             height: 100%;
         }
+    }
+}
+
+.wrapper {
+    height: 550px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .username-form {
+        padding: 3em;
+        border: 1px solid #EEEEEE;
+        border-radius: .5em;
+        height: 300px;
+        width: 400px;
     }
 }
