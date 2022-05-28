@@ -40,13 +40,13 @@ function App() {
       joinRoomCallback(messages, "general")
     );
     socketRef.current.on("new user", (users) => setAllUsers(users));
-    socketRef.current.on("new message", ({ content, sender, chatName }) => {
+    socketRef.current.on("new message", ({ content, sender, chatName, date }) => {
       setMessages(messages => {
         const newMessages = immer(messages, draft => {
           if (draft[chatName]) {
-            draft[chatName].push({ content, sender });
+            draft[chatName].push({ content, sender, date });
           } else {
-            draft[chatName] = [{ content, sender }];
+            draft[chatName] = [{ content, sender, date }];
           }
         });
         return newMessages;

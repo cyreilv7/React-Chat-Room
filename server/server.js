@@ -45,11 +45,13 @@ io.on("connection", (socket) => {
 
 
     socket.on("send message", ({ content, to, sender, chatName, isChannel }) => {
+        let date = new Date().toISOString();
         if (isChannel) {
             const payload = {
                 content,
                 chatName,
                 sender,
+                date: date,
             };
             socket.to(to).emit("new message", payload); // 'to' can be a room name or socket id
         } else {
@@ -57,16 +59,17 @@ io.on("connection", (socket) => {
                 content,
                 chatName: sender, // dm chat name = sender 
                 sender,
+                date: date,
             };
             socket.to(to).emit("new message", payload);
         }
         if (messages[chatName]) {
             messages[chatName].push({
                 sender,
-                content
+                content,
+                date: date,
             });
         }
-        console.log(messages[chatName]);
     });
 
     socket.on("disconnect", () => {

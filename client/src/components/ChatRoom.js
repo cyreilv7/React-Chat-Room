@@ -4,6 +4,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
 import InputGroup from 'react-bootstrap/InputGroup';
+import moment from "moment";
 
 const ChatRoom = (props) => {
   const rooms = ["general", "random", "programming-help", "career-advice"];
@@ -12,7 +13,10 @@ const ChatRoom = (props) => {
   const renderMessages = (message, i) => {
     return (
       <div key={ i }>
-        <h5> { message.sender }</h5>
+        <h5 className="d-inline"> { message.sender }</h5> 
+        <small className="ms-3 text-muted align-top">
+          { moment(message.date).format("h:mm a") }
+        </small>
         <p> { message.content } </p>
       </div>
     );
