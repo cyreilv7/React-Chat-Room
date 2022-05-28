@@ -27,7 +27,11 @@ const ChatRoom = (props) => {
   } else {
     body = (
       <div className="d-flex h-100 justify-content-center align-items-center">
-        <Button variant={"primary"} onClick={() => props.joinRoom(props.currentChat.chatName)}> Join {props.currentChat.chatName}</Button>
+        <Button 
+          variant={"warning"} 
+          className="p-3"
+          onClick={() => props.joinRoom(props.currentChat.chatName)}
+        > Join {props.currentChat.chatName}</Button>
       </div>
     )
   }
