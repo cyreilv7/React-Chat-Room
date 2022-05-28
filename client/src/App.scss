@@ -16,21 +16,35 @@
     width: 1200px;
     color:#FFFFFF;
 
-    .sidebar .row {
-        cursor: pointer;
+    .sidebar { 
+        height: 100%;
+        background-color: #4A154B;
+
+        .users-container{
+            margin-top: 5em;
+        }
+
+        .row {
+            cursor: pointer;
+        }
     }
 
     .sidebar, .chat-panel {
-        height: 100%;
-        background-color: #4A154B;
         padding: 1.5em 1.5em 1.2em;
+        background-color:#4A154B;
+    }
+
+    .chat-panel {
+        height: 90%;
+        border-radius: .3em;
+        align-self: center;
+        background-color: #FFFFFF;
     }
 
 
     .channel-info {
         height: 50px;
-        background-color: #4A154B;
-        color:#FFFFFF;
+        color: black;
     }
 
     .messages {
@@ -48,7 +62,8 @@
         
         .text-box {
             vertical-align: text-top;
-            height: 100%;
+            max-height: 100%;
+            resize: vertical;
         }
     }
 }

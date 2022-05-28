@@ -81,20 +81,20 @@ const ChatRoom = (props) => {
         <Row className="w-100">
           <Col sm={3} className="sidebar text-center">
             <Row>
-              <h3>Channels</h3>
+              <h3 className="pb-2 mb-0 mt-1">Channels</h3>
               <Container className="channels d-flex flex-column align-items-center">
                 {rooms.map(renderRooms)}
               </Container>
             </Row>
-            <Row className="mt-5">
-              <h3>All users</h3>
+            <Row className="users-container">
+              <h3 className="pb-2 mb-0">All users</h3>
               <Container className="users d-flex flex-column align-items-center">
                 {props.allUsers.map(renderUsers)}
               </Container>
             </Row>
           </Col>
           <Col sm={9} className="chat-panel d-flex flex-column">
-            <Row className="channel-info mb-2">
+            <Row className="channel-info mb-2 border-bottom">
                 <h3>#{props.currentChat.chatName}</h3>
             </Row>
             <div className="messages p-3 mb-3 border-bottom">
@@ -104,6 +104,7 @@ const ChatRoom = (props) => {
               <textarea
                 className="text-box w-100 form-control text-start"
                 value={props.message}
+                maxLength="500"
                 onChange={props.handleMessageChange}
                 onKeyPress={(e) => handleKeyPress(e)}
                 placeholder="Enter message here"
