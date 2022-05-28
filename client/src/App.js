@@ -32,6 +32,9 @@ function App() {
   const connect = () => {
     setIsConnected(true);
     socketRef.current = io.connect("/");
+    if (username == "") {
+      setUsername(() => getRandomUsername());
+    }
     socketRef.current.emit("join server", username);
     socketRef.current.emit("join room", "general", (messages) =>
       joinRoomCallback(messages, "general")
@@ -51,8 +54,18 @@ function App() {
     });
   };
 
+  const getRandomUsername = () => {
+    const suffix = Math.floor(Math.random()*1000).toString();
+    return `anon${suffix}`;
+  }
+
   const handleUsernameChange = (e) => {
-    setUsername(e.target.value);
+    if (e.target.type === "text" && e.target.value) {
+      setUsername(e.target.value);
+    }
+    else {
+      setUsername(() => getRandomUsername());
+    }
   };
 
   const handleMessageChange = (e) => {
