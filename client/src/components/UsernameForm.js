@@ -7,7 +7,7 @@ import InputGroup from 'react-bootstrap/InputGroup'
 
 const UsernameForm = (props) => {
     return (
-        <div className="wrapper">
+        <div className="username-form-wrapper">
             <div className="username-form">
                 <h3 className="mb-4">Welcome to Chat Room!</h3>
                 <Form onSubmit={props.connect}>

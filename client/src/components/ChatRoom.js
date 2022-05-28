@@ -77,9 +77,9 @@ const ChatRoom = (props) => {
   }
 
   return (
-      <Container className="d-flex chatroom-container ms-0">
-        <Row className="w-75">
-          <Col sm={3} className="sidebar text-center border-end">
+      <Container className="d-flex chatroom-container m-0">
+        <Row className="w-100">
+          <Col sm={3} className="sidebar text-center">
             <Row>
               <h3>Channels</h3>
               <Container className="channels d-flex flex-column align-items-center">
@@ -94,7 +94,7 @@ const ChatRoom = (props) => {
             </Row>
           </Col>
           <Col sm={9} className="chat-panel d-flex flex-column">
-            <Row className="channel-info mb-2 border-bottom">
+            <Row className="channel-info mb-2">
                 <h3>#{props.currentChat.chatName}</h3>
             </Row>
             <div className="messages p-3 mb-3 border-bottom">
