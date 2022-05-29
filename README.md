@@ -1,4 +1,4 @@
-# Chat-Room
+# React-Chat-Room
 
 ## Description
 A chatroom application where users can exchanges messages with one another in real time. 
