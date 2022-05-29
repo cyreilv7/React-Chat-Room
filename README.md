@@ -16,7 +16,7 @@ Status: [Click here](https://react-chatroom-app.herokuapp.com/) to see it live!
 ## Features
 * Join and switch between different public channels
 * Start a direct message with another user
-* View all previous messages sent to a channel even if joining for first time
+* View all previously sent messages in a channel even if joining it for first time
 * Sidebar with a list of all channels and active users
 
 ## Future Updates
