@@ -4,7 +4,8 @@
 A chatroom application where users can exchanges messages with one another in real time. 
 
 ## Build Status
-Status: [Click here](https://react-chatroom-app.herokuapp.com/) to see it live!
+Status: Live
+[Click here](https://react-chatroom-app.herokuapp.com/) to see it live!
 
 ## Demo
 
